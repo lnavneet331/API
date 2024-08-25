@@ -2,6 +2,15 @@ from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
+# Helper function to extract user information (Modify with actual user data)
+def get_user_info():
+    return {
+        "user_id": "john_doe_17091999",  # Replace with actual user data
+        "email": "john@xyz.com",  # Replace with actual user data
+        "roll_number": "ABCD123"  # Replace with actual user data
+    }
+
+# POST /bfhl
 @app.route('/bfhl', methods=['POST'])
 def handle_post():
     try:
@@ -40,10 +49,11 @@ def handle_post():
         }
         return jsonify(response), 400
 
+# GET /bfhl
 @app.route('/bfhl', methods=['GET'])
 def handle_get():
-    # Hardcoded response for GET method
     return jsonify({"operation_code": 1}), 200
 
+# Entry point
 if __name__ == '__main__':
     app.run(debug=True)
