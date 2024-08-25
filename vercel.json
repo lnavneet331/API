@@ -12,8 +12,12 @@
     ],
     "routes": [
       {
-        "src": "/(.*)",
+        "src": "/bfhl",
         "dest": "/api/index.py"
+      },
+      {
+        "src": "/",
+        "dest": "/index.html"
       }
     ]
   }
