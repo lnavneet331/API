@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Tester</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+        }
+        textarea, input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #response {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>API Tester</h1>
+
+    <button id="get-button">GET Method</button>
+
+    <form id="post-form">
+        <label for="data">Enter data for POST method (JSON format):</label>
+        <textarea id="data" rows="5">{"data": ["1", "A", "3", "b"]}</textarea>
+        <button type="submit">POST Method</button>
+    </form>
+
+    <div id="response">
+        <h3>Response:</h3>
+        <pre id="response-output"></pre>
+    </div>
+
+    <script>
+        document.getElementById('get-button').addEventListener('click', async () => {
+            try {
+                const response = await fetch('/bfhl');
+                const result = await response.json();
+                document.getElementById('response-output').textContent = JSON.stringify(result, null, 2);
+            } catch (error) {
+                document.getElementById('response-output').textContent = 'Error: ' + error.message;
+            }
+        });
+
+        document.getElementById('post-form').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            try {
+                const data = JSON.parse(document.getElementById('data').value);
+                const response = await fetch('/bfhl', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+                document.getElementById('response-output').textContent = JSON.stringify(result, null, 2);
+            } catch (error) {
+                document.getElementById('response-output').textContent = 'Error: ' + error.message;
+            }
+        });
+    </script>
+
+</body>
+</html>
