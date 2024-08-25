@@ -7,26 +7,27 @@ def handle_post():
     try:
         # Get the data from the JSON request
         data = request.json.get('data')
-        
+
         # Validate if 'data' exists and is a list
         if not isinstance(data, list):
             raise ValueError("Invalid input: 'data' should be a list")
-        
+
         # Separate numbers and alphabets
         numbers = [item for item in data if item.isdigit()]
         alphabets = [item for item in data if item.isalpha()]
-        
-        # Find the highest lowercase alphabet
+
+        # Find the highest lowercase alphabet (consider empty list)
         lowercases = [item for item in alphabets if item.islower()]
-        highest_lowercase_alphabet = [max(lowercases)] if lowercases else []
+        highest_lowercase_alphabet = max(lowercases) if lowercases else []
 
     except Exception as e:
-        # If an error occurs, handle it by setting default values
-        numbers = [item for item in request.json.get('data', []) if isinstance(item, str) and item.isdigit()]
+        # Handle errors gracefully, including invalid data types
+        print(f"Error processing request: {e}")  # Log the error for debugging
+        numbers = []
         alphabets = []
         highest_lowercase_alphabet = []
-    
-    # Construct the response (either normal flow or fallback)
+
+    # Construct the response with empty lists for missing fields
     response = {
         "is_success": True,
         "user_id": "john_doe_17091999",
