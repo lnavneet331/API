@@ -18,7 +18,7 @@ def handle_post():
 
         # Find the highest lowercase alphabet (consider empty list)
         lowercases = [item for item in alphabets if item.islower()]
-        highest_lowercase_alphabet = max(lowercases) if lowercases else []
+        highest_lowercase_alphabet = [max(lowercases)] if lowercases else []
 
     except Exception as e:
         # Handle errors gracefully, including invalid data types
@@ -27,7 +27,7 @@ def handle_post():
         alphabets = []
         highest_lowercase_alphabet = []
 
-    # Construct the response with empty lists for missing fields
+    # Construct the response with the fields, ensuring lists for the outputs
     response = {
         "is_success": True,
         "user_id": "john_doe_17091999",
