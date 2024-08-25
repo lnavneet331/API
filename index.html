@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>API Tester</title>
+    <title>ABCD123</title> <!-- Replace with your actual roll number -->
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -41,13 +41,20 @@
 
     <h1>API Tester</h1>
 
-    <button id="get-button">GET Method</button>
-
-    <form id="post-form">
-        <label for="data">Enter data for POST method (JSON format):</label>
+    <form id="json-form">
+        <label for="data">Enter JSON Data:</label>
         <textarea id="data" rows="5">{"data": ["1", "A", "3", "b"]}</textarea>
-        <button type="submit">POST Method</button>
+        <button type="submit">Submit JSON</button>
     </form>
+
+    <div id="dropdown-container" style="display:none;">
+        <label for="response-select">Select response data to display:</label>
+        <select id="response-select" multiple>
+            <option value="alphabets">Alphabets</option>
+            <option value="numbers">Numbers</option>
+            <option value="highest_lowercase_alphabet">Highest Lowercase Alphabet</option>
+        </select>
+    </div>
 
     <div id="response">
         <h3>Response:</h3>
@@ -55,29 +62,49 @@
     </div>
 
     <script>
-        document.getElementById('get-button').addEventListener('click', async () => {
-            try {
-                const response = await fetch('/bfhl');
-                const result = await response.json();
-                document.getElementById('response-output').textContent = JSON.stringify(result, null, 2);
-            } catch (error) {
-                document.getElementById('response-output').textContent = 'Error: ' + error.message;
-            }
-        });
-
-        document.getElementById('post-form').addEventListener('submit', async (event) => {
+        document.getElementById('json-form').addEventListener('submit', async (event) => {
             event.preventDefault();
+            const jsonInput = document.getElementById('data').value;
+            let parsedData;
+
             try {
-                const data = JSON.parse(document.getElementById('data').value);
+                parsedData = JSON.parse(jsonInput);
+            } catch (error) {
+                alert('Invalid JSON format');
+                return;
+            }
+
+            try {
                 const response = await fetch('/bfhl', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify(data)
+                    body: JSON.stringify(parsedData)
                 });
                 const result = await response.json();
+
+                // Show the dropdown
+                document.getElementById('dropdown-container').style.display = 'block';
+
+                // Handle the dropdown selection and render the filtered response
+                document.getElementById('response-select').addEventListener('change', () => {
+                    const selectedOptions = Array.from(document.getElementById('response-select').selectedOptions)
+                                                .map(option => option.value);
+
+                    const filteredResponse = selectedOptions.reduce((acc, key) => {
+                        if (result[key]) {
+                            acc[key] = result[key];
+                        }
+                        return acc;
+                    }, {});
+
+                    document.getElementById('response-output').textContent = JSON.stringify(filteredResponse, null, 2);
+                });
+
+                // Initial response display
                 document.getElementById('response-output').textContent = JSON.stringify(result, null, 2);
+
             } catch (error) {
                 document.getElementById('response-output').textContent = 'Error: ' + error.message;
             }
